@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 // TODO: add flutter_svg to pubspec.yaml
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hr_pwa/constant/features/attendance/clock-in.dart';
-import 'package:hr_pwa/constant/features/claim/create.dart';
-import 'package:hr_pwa/constant/features/leave/apply.dart';
+import 'package:hr_pwa/features/attendance/clock-in.dart';
+import 'package:hr_pwa/features/claim/create.dart';
+import 'package:hr_pwa/features/leave/apply.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

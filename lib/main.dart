@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hr_pwa/constant/features/auth/signin.dart';
+import 'package:hr_pwa/features/auth/services/auth_gate.dart';
+import 'package:hr_pwa/features/auth/signin.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+      url: 'https://bjktqwxvydafaksxmsof.supabase.co',
+      anonKey:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqa3Rxd3h2eWRhZmFrc3htc29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQxNjQwNjgsImV4cCI6MjA1OTc0MDA2OH0.qDnM1ma--99pc40zB78gfuTaes4AK2bd6EwS9vMXpoo');
   runApp(const MyApp());
 }
 
@@ -14,25 +21,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SignInScreen(),
+      home: AuthGate(),
     );
   }
 }

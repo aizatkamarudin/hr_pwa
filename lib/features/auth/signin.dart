@@ -1,10 +1,50 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_pwa/constant/features/home/home.dart';
+import 'package:hr_pwa/features/auth/services/auth_services.dart';
+import 'package:hr_pwa/features/auth/signup.dart';
+import 'package:hr_pwa/features/home/home.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
+  SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  // get auth services
+  final authService = AuthServices();
+
+  // text controller
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  // login button pressed
+  void login() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      try {
+        await authService.signInWithEmailPassword(email, password);
+        Navigator.pop(context);
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        }
+      }
+      // Navigate to the main screen
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const HomeScreen()),
+      // );
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
 
-  SignInScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,25 +71,29 @@ class SignInScreen extends StatelessWidget {
                     key: _formKey,
                     child: Column(
                       children: [
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            hintText: 'Phone',
-                            filled: true,
-                            fillColor: Color(0xFFF5FCF9),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0 * 1.5, vertical: 16.0),
-                            border: const OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: TextFormField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              hintText: 'Email',
+                              filled: true,
+                              fillColor: Color(0xFFF5FCF9),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0 * 1.5, vertical: 16.0),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                              ),
                             ),
+                            onSaved: (passaword) {
+                              // Save it
+                            },
                           ),
-                          keyboardType: TextInputType.phone,
-                          onSaved: (phone) {
-                            // Save it
-                          },
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           child: TextFormField(
+                            controller: _passwordController,
                             obscureText: true,
                             decoration: const InputDecoration(
                               hintText: 'Password',
@@ -67,16 +111,7 @@ class SignInScreen extends StatelessWidget {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              // Navigate to the main screen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                              );
-                            }
-                          },
+                          onPressed: login,
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
                             backgroundColor: const Color(0xFF00BF6D),
@@ -97,7 +132,12 @@ class SignInScreen extends StatelessWidget {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignupScreen()),
+                            );
+                          },
                           child: Text.rich(
                             const TextSpan(
                               text: "Don’t have an account? ",
